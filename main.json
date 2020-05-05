@@ -1,0 +1,49 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "aws_region": "us-east-2",
+
+    "vagrant_source_path": "ubuntu/bionic64"
+  },
+
+  "builders": [
+    {
+      "type": "vagrant",
+      "source_path": "{{user `vagrant_source_path`}}",
+      "communicator": "ssh",
+      "skip_add": "true"
+    },
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "{{user `aws_region`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": ["099720109477"],
+        "most_recent": true
+      },
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "jeqo-cp {{timestamp}}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo curl https://packages.confluent.io/deb/5.5/archive.key > archive.key",
+        "sudo apt-key add archive.key",
+        "sudo add-apt-repository 'deb [arch=amd64] https://packages.confluent.io/deb/5.5 stable main'",
+        "sudo apt-get install -y default-jdk",
+        "sudo apt-get update && sudo apt-get install -y confluent-platform-2.12"
+      ]
+    }
+  ]
+}
