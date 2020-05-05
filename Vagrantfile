@@ -3,8 +3,10 @@
 num_zookeepers = 3
 num_brokers = 3
 num_c3 = 1
-ram_megabytes = 1280
-base_box = "confluent_platform"
+zk_ram_mb = 512
+kafka_ram_mb = 1280
+c3_ram_mb = 1280
+base_box = "packer-cp"
 base_box_url = "file://output-vagrant/package.box"
 
 enable_hostmanager = true
@@ -18,12 +20,8 @@ Vagrant.configure("2") do |config|
     override.vm.box_url = base_box_url
 
     override.hostmanager.ignore_private_ip = false
-
-    # Brokers started with the standard script currently set Xms and Xmx to 1G,
-    # plus we need some extra head room.
-    vb.customize ["modifyvm", :id, "--memory", ram_megabytes.to_s]
-    
   end
+
   def name_node(node, name)
     node.vm.hostname = name
   end
@@ -31,6 +29,14 @@ Vagrant.configure("2") do |config|
   def assign_local_ip(node, ip_address)
     node.vm.provider :virtualbox do |vb,override|
       override.vm.network :private_network, ip: ip_address
+    end
+  end
+
+  def assign_ram_memory(node, ram_mb)
+    node.vm.provider :virtualbox do |vb,override|
+      # Brokers started with the standard script currently set Xms and Xmx to 1G,
+      # plus we need some extra head room.
+      vb.customize ["modifyvm", :id, "--memory", ram_mb]
     end
   end
   
@@ -42,6 +48,7 @@ Vagrant.configure("2") do |config|
       name_node(zookeeper, name)
       ip_address = "192.168.50." + (10 + i).to_s
       assign_local_ip(zookeeper, ip_address)
+      assign_ram_memory(zookeeper, zk_ram_mb)
       # zookeeper.vm.provision "shell", path: "vagrant/base.sh", env: {"JDK_MAJOR" => jdk_major, "JDK_FULL" => jdk_full}
       # zk_jmx_port = enable_jmx ? (8000 + i).to_s : ""
       # zookeeper.vm.provision "shell", path: "vagrant/zk.sh", :args => [i.to_s, num_zookeepers, zk_jmx_port]
@@ -56,6 +63,7 @@ Vagrant.configure("2") do |config|
       name_node(broker, name)
       ip_address = "192.168.50." + (50 + i).to_s
       assign_local_ip(broker, ip_address)
+      assign_ram_memory(broker, kafka_ram_mb)
       # We need to be careful about what we list as the publicly routable
       # address since this is registered in ZK and handed out to clients. If
       # host DNS isn't setup, we shouldn't use hostnames -- IP addresses must be
@@ -66,18 +74,19 @@ Vagrant.configure("2") do |config|
   }
   
   (1..num_c3).each { |i|
-    name = "c3-" + i.to_s
-    config.vm.define name do |broker|
-      name_node(broker, name)
+    name = "ccc" + i.to_s
+    config.vm.define name do |c3|
+      name_node(c3, name)
       ip_address = "192.168.50." + (30 + i).to_s
-      assign_local_ip(broker, ip_address)
+      assign_local_ip(c3, ip_address)
+      assign_ram_memory(c3, c3_ram_mb)
       # We need to be careful about what we list as the publicly routable
       # address since this is registered in ZK and handed out to clients. If
       # host DNS isn't setup, we shouldn't use hostnames -- IP addresses must be
       # used to support clients running on the host.
       zookeeper_connect = zookeepers.map{ |zk_addr| zk_addr + ":2181"}.join(",")
       bootstrap_servers = brokers.map{ |zk_addr| zk_addr + ":2181"}.join(",")
-      broker.vm.post_up_message = "zookeeper.connect=" + zookeeper_connect + "\n" + "bootstrap.servers=" + bootstrap_servers
+      c3.vm.post_up_message = "zookeeper.connect=" + zookeeper_connect + "\n" + "bootstrap.servers=" + bootstrap_servers
     end
   }
 end

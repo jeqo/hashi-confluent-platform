@@ -11,6 +11,7 @@
     {
       "type": "vagrant",
       "source_path": "{{user `vagrant_source_path`}}",
+      "box_name": "packer-cp",
       "communicator": "ssh",
       "skip_add": "true"
     },

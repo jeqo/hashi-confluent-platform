@@ -2,7 +2,6 @@
 
 ## Vagrant with VirtualBox
 
-
 Download Vagrant box to prepare base image:
 
 ```bash
