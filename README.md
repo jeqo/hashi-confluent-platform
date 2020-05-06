@@ -104,4 +104,35 @@ $CONFLUENT_HOME/bin/zookeeper-shell zk1:2181 get /zookeeper/config
 
 ### Configure and Start Kafka brokers
 
+Explore [`brokers.yml` playbook](./brokers.yml) and run the playbook:
 
+```bash
+ansible-playbook -i enviroments/virtualbox.yml brokers.yml
+# or
+ansible-playbook -i enviroments/aws.yml brokers.yml
+```
+
+Expected result: Kafka brokers started and cluster up and running.
+
+Validation:
+
+```bash
+$CONFLUENT_HOME/bin/kafka-topics --bootstrap-server broker1:9092 \
+--create \
+--topic test \
+--replication-factor 3 \
+--partitions 8
+```
+
+```bash
+$CONFLUENT_HOME/bin/kafka-topics --bootstrap-server broker1:9092 --describe --topic test
+Topic: test    PartitionCount: 8       ReplicationFactor: 3    Configs: segment.bytes=1073741824
+        Topic: test    Partition: 0    Leader: 1       Replicas: 1,3,2 Isr: 1,3,2   Offline: 
+        Topic: test    Partition: 1    Leader: 2       Replicas: 2,1,3 Isr: 2,1,3   Offline: 
+        Topic: test    Partition: 2    Leader: 3       Replicas: 3,2,1 Isr: 3,2,1   Offline: 
+        Topic: test    Partition: 3    Leader: 1       Replicas: 1,2,3 Isr: 1,2,3   Offline: 
+        Topic: test    Partition: 4    Leader: 2       Replicas: 2,3,1 Isr: 2,3,1   Offline: 
+        Topic: test    Partition: 5    Leader: 3       Replicas: 3,1,2 Isr: 3,1,2   Offline: 
+        Topic: test    Partition: 6    Leader: 1       Replicas: 1,3,2 Isr: 1,3,2   Offline: 
+        Topic: test    Partition: 7    Leader: 2       Replicas: 2,1,3 Isr: 2,1,3   Offline: 
+```
