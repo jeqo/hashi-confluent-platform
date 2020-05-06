@@ -1,0 +1,11 @@
+# the port at which the clients will connect
+clientPort={{zookeeper_client_port}}
+# the directory where the snapshot is stored.
+dataDir={{zookeeper_data_dir}}
+# Distributed Zookeeper ensemble properties
+tickTime=2000
+initLimit=5
+syncLimit=2
+{% for host in groups['zookeeper'] %}
+server.{{ hostvars[host]['zookeeper_id'] }}={{ hostvars[host]['hostname'] }}:{{zookeeper_peer_port}}:{{zookeeper_leader_port}}
+{% endfor %}

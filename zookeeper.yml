@@ -1,0 +1,35 @@
+---
+- hosts: zookeeper
+  become: yes
+  serial: yes
+  handlers:
+    - name: restart zookeeper
+      systemd:
+        name: confluent-zookeeper
+        state: restarted
+  tasks:
+    - name: Setting Zookeeper ID file
+      template:
+        src: myid.j2
+        dest: "{{zookeeper_data_dir}}/myid"
+        mode: 0555
+        owner: cp-kafka
+        group: confluent
+
+    - name: Preparing Zookeeper configuration
+      template:
+        src: zookeeper.properties.j2
+        dest: /etc/kafka/zookeeper.properties
+        mode: 0400
+        owner: cp-kafka
+        group: confluent
+      notify:
+        - restart zookeeper
+    
+    - meta: flush_handlers
+    
+    - name: Start Zookeeper service
+      systemd:
+        name: confluent-zookeeper
+        state: started
+        enabled: yes

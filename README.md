@@ -1,6 +1,21 @@
 # Confluent Platform first cluster
 
-## Vagrant with VirtualBox
+## Checklist
+
+1. Choose to start your environment ...
+  1.1. with Packer, Vagrant and VirtualBox
+  1.2. with Packer, Terraform and AWS //TODO
+2. Follow installation steps
+
+## Required software
+
+* Packer
+* Vagrant[1.1]
+* VirtualBox[1.1]
+* Terraform[1.2]
+* Ansible
+
+## Start environment with Vagrant and VirtualBox
 
 Download Vagrant box to prepare base image:
 
@@ -47,8 +62,46 @@ vagrant up
 ==> c3-1: bootstrap.servers=broker1:2181,broker2:2181,broker3:2181
 ```
 
+To add IPs to hosts file:
+
+```bash
+vagrant hostmanager
+```
+
 When finished, destroy VMs if not needed any more:
 
 ```bash
 vagrant destroy -f
 ```
+
+## Installation steps
+
+Check connection via Ansible:
+
+```bash
+ansible-playbook -i enviroments/virtualbox.yml ping.yml
+# or
+ansible-playbook -i enviroments/aws.yml ping.yml
+```
+
+### Configure and start Zookeeper
+
+Explore [`zookeeper.yml` playbook](./zookeeper.yml) and run the playbook:
+
+```bash
+ansible-playbook -i enviroments/virtualbox.yml zookeeper.yml
+# or
+ansible-playbook -i enviroments/aws.yml zookeeper.yml
+```
+
+Expected result: Zookeeper nodes started and ensemble created.
+
+Validation:
+
+```bash
+$CONFLUENT_HOME/bin/zookeeper-shell zk1:2181 get /zookeeper/config
+```
+
+### Configure and Start Kafka brokers
+
+

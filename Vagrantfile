@@ -1,24 +1,23 @@
-
 # Inspired by https://github.com/apache/kafka/blob/trunk/Vagrantfile
 num_zookeepers = 3
 num_brokers = 3
 num_c3 = 1
-zk_ram_mb = 512
+zk_ram_mb = 1280
 kafka_ram_mb = 1280
 c3_ram_mb = 1280
 base_box = "packer-cp"
 base_box_url = "file://output-vagrant/package.box"
 
-enable_hostmanager = true
-
 Vagrant.configure("2") do |config|
-  config.hostmanager.enabled = enable_hostmanager
-  
+
   ## Provider-specific global configs
   config.vm.provider :virtualbox do |vb,override|
     override.vm.box = base_box
     override.vm.box_url = base_box_url
 
+    override.hostmanager.enabled = true
+    override.hostmanager.manage_host = true
+    override.hostmanager.manage_guest = true
     override.hostmanager.ignore_private_ip = false
   end
 

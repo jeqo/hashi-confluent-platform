@@ -1,0 +1,27 @@
+---
+- hosts: brokers
+  become: yes
+  serial: yes
+  handlers:
+    - name: restart broker
+      systemd:
+        name: confluent-kafka
+        state: restarted
+  tasks:
+    - name: Preparing Broker configuration
+      template:
+        src: server.properties.j2
+        dest: /etc/kafka/server.properties
+        mode: 0400
+        owner: cp-kafka
+        group: confluent
+      notify:
+        - restart broker
+    
+    - meta: flush_handlers
+    
+    - name: Start Kafka service
+      systemd:
+        name: confluent-kafka
+        state: started
+        enabled: yes
