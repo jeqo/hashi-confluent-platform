@@ -3,8 +3,8 @@
 ## Checklist
 
 1. Choose to start your environment ...
-  1.1. with Packer, Vagrant and VirtualBox
-  1.2. with Packer, Terraform and AWS //TODO
+    1. with Packer, Vagrant and VirtualBox
+    2. with Packer, Terraform and AWS //TODO
 2. Follow installation steps
 
 ## Required software
