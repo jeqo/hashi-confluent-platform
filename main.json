@@ -3,6 +3,7 @@
     "aws_access_key": "",
     "aws_secret_key": "",
     "aws_region": "us-east-2",
+    "aws_user": "",
 
     "vagrant_source_path": "ubuntu/bionic64"
   },
@@ -31,7 +32,7 @@
       },
       "instance_type": "t2.micro",
       "ssh_username": "ubuntu",
-      "ami_name": "jeqo-cp {{timestamp}}"
+      "ami_name": "{{user `aws_user`}}-cp {{timestamp}}"
     }
   ],
 
@@ -39,6 +40,7 @@
     {
       "type": "shell",
       "inline": [
+        "sudo apt -y update",
         "sudo curl https://packages.confluent.io/deb/5.5/archive.key > archive.key",
         "sudo apt-key add archive.key",
         "sudo add-apt-repository 'deb [arch=amd64] https://packages.confluent.io/deb/5.5 stable main'",

@@ -9,6 +9,10 @@ add_vagrant_box:
 build_vagrant_box:
 	packer build --only=vagrant main.json
 
+.PHONY: build_aws_ami
+build_aws_ami:
+	packer build --only=amazon-ebs main.json
+
 .PHONY: prereq_vagrant
 prereq_vagrant:
 	vagrant plugin install vagrant-hostmanager
