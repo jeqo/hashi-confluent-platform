@@ -1,3 +1,5 @@
 *.log
 output-vagrant/
 .vagrant/
+.terraform/
+terraform.tfstate*
