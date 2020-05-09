@@ -74,6 +74,35 @@ When finished, destroy VMs if not needed any more:
 vagrant destroy -f
 ```
 
+## Start environment with Terraform and AWS
+
+Build Amazon AMI:
+
+```bash
+make build_aws_ami
+```
+
+A new AMI should be created on AWS with the following format:
+`{{username}}-cp {{timestamp}}`
+
+Initialize Terraform tools:
+
+```bash
+terraform init
+```
+
+And provision AWS instances:
+
+```bash
+terraform apply -var user=... -var key_name=... -var ami=from_packer_output
+```
+
+When finished, destroy resources:
+
+```bash
+terraform destroy
+```
+
 ## Installation steps
 
 Check connection via Ansible:
@@ -83,6 +112,8 @@ ansible-playbook -i enviroments/virtualbox.yml ping.yml
 # or
 ansible-playbook -i enviroments/aws.yml ping.yml
 ```
+
+> For AWS, create an inventory file based on `environments/aws_template.yml` and the outputs from Terraform. 
 
 ### Configure and start Zookeeper
 

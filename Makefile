@@ -7,16 +7,12 @@ add_vagrant_box:
 
 .PHONY: build_vagrant_box
 build_vagrant_box:
-	packer build --only=vagrant main.json
+	packer build -only=vagrant main.json
 
 .PHONY: build_aws_ami
 build_aws_ami:
-	packer build --only=amazon-ebs main.json
+	packer build -only=amazon-ebs -var aws_user=${USER} main.json
 
 .PHONY: prereq_vagrant
 prereq_vagrant:
 	vagrant plugin install vagrant-hostmanager
-
-.PHONY: start_vagrant
-start_vagrant:
-	vagrant up

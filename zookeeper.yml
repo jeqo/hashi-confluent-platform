@@ -2,6 +2,10 @@
 - hosts: zookeeper
   become: yes
   serial: yes
+  vars:
+    zookeeper_peer_port: 2888
+    zookeeper_leader_port: 3888
+    zookeeper_data_dir: /var/lib/zookeeper
   handlers:
     - name: restart zookeeper
       systemd:

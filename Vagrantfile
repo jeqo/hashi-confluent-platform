@@ -1,5 +1,5 @@
 # Inspired by https://github.com/apache/kafka/blob/trunk/Vagrantfile
-num_zookeepers = 3
+num_zookeepers = 1
 num_brokers = 3
 num_c3 = 1
 zk_ram_mb = 1280

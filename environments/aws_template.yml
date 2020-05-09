@@ -1,0 +1,31 @@
+# Replace hosts dns and ip with terraform outputs
+all:
+  vars:
+    ansible_user: ubuntu
+    ansible_ssh_private_key_file: ~/.ssh/private_key
+zookeeper:
+  hosts:
+    zk1-dns:
+      hostname: 192.168.50.11
+      zookeeper_id: 1
+   # zk2:
+   #   hostname: 192.168.50.12
+   #   zookeeper_id: 2
+   # zk3:
+   #   hostname: 192.168.50.13
+   #   zookeeper_id: 3
+brokers:
+  hosts:
+    broker1-dns:
+      hostname: 192.168.50.51
+      broker_id: 1
+    broker2-dns:
+      hostname: 192.168.50.52
+      broker_id: 2
+    broker3-dns:
+      hostname: 192.168.50.53
+      broker_id: 3
+c3:
+  hosts:
+    ccc1-dns:
+      hostname: 192.168.50.31

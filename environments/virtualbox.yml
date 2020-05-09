@@ -4,41 +4,32 @@ all:
 zookeeper:
   vars:
     zookeeper_client_port: 2181
-    zookeeper_peer_port: 2888
-    zookeeper_leader_port: 3888
-    zookeeper_data_dir: /var/lib/zookeeper
   hosts:
     zk1:
       ansible_ssh_private_key_file: .vagrant/machines/zk1/virtualbox/private_key
       hostname: 192.168.50.11
-      
       zookeeper_id: 1
-    zk2:
-      ansible_ssh_private_key_file: .vagrant/machines/zk2/virtualbox/private_key
-      hostname: 192.168.50.12
-
-      zookeeper_id: 2
-    zk3:
-      ansible_ssh_private_key_file: .vagrant/machines/zk3/virtualbox/private_key
-      hostname: 192.168.50.13
-
-      zookeeper_id: 3
+    # zk2:
+    #   ansible_ssh_private_key_file: .vagrant/machines/zk2/virtualbox/private_key
+    #   hostname: 192.168.50.12
+    #   zookeeper_id: 2
+    # zk3:
+    #   ansible_ssh_private_key_file: .vagrant/machines/zk3/virtualbox/private_key
+    #   hostname: 192.168.50.13
+    #   zookeeper_id: 3
 brokers:
   hosts:
     broker1:
       ansible_ssh_private_key_file: .vagrant/machines/broker1/virtualbox/private_key
       hostname: 192.168.50.51
-
       broker_id: 1
     broker2:
       ansible_ssh_private_key_file: .vagrant/machines/broker2/virtualbox/private_key
       hostname: 192.168.50.52
-      
       broker_id: 2
     broker3:
       ansible_ssh_private_key_file: .vagrant/machines/broker3/virtualbox/private_key
       hostname: 192.168.50.53
-      
       broker_id: 3
 c3:
   hosts:
