@@ -3,4 +3,5 @@ output-vagrant/
 .vagrant/
 .terraform/
 terraform.tfstate*
+.terraform.tfstate*
 environments/aws.yml
