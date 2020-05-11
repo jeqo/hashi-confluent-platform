@@ -1,0 +1,34 @@
+---
+- hosts: c3
+  become: yes
+  serial: yes
+  handlers:
+    - name: restart c3
+      systemd:
+        name: confluent-control-center
+        state: restarted
+  tasks:
+    - name: Set directory permissions
+      file:
+        state: directory
+        path: /var/lib/confluent-control-center
+        owner: cp-control-center
+        group: confluent
+
+    - name: Preparing C3 configuration
+      template:
+        src: control-center.properties.j2
+        dest: /etc/confluent-control-center/control-center-production.properties
+        mode: 0400
+        owner: cp-control-center
+        group: confluent
+      notify:
+        - restart c3
+    
+    - meta: flush_handlers
+    
+    - name: Start C3 service
+      systemd:
+        name: confluent-control-center
+        state: started
+        enabled: yes
