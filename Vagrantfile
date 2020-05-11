@@ -9,16 +9,15 @@ base_box = "packer-cp"
 base_box_url = "file://output-vagrant/package.box"
 
 Vagrant.configure("2") do |config|
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.manage_guest = true
+  config.hostmanager.ignore_private_ip = false
 
   ## Provider-specific global configs
   config.vm.provider :virtualbox do |vb,override|
     override.vm.box = base_box
     override.vm.box_url = base_box_url
-
-    override.hostmanager.enabled = true
-    override.hostmanager.manage_host = true
-    override.hostmanager.manage_guest = true
-    override.hostmanager.ignore_private_ip = false
   end
 
   def name_node(node, name)
