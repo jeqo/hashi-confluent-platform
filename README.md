@@ -185,3 +185,9 @@ ssh -i ~/.ssh/private_file 9021:ec2.... ubuntu@ec2....
 ```
 
 And Validate C3 is available: <http://localhost:9021>
+
+## Next steps:
+
+* Add more zookeeper machines
+* Add schema-registry, connect and rest-proxy machines
+* Securing the cluster using TLS and kerberos
