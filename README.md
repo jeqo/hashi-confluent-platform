@@ -133,7 +133,7 @@ Validation:
 $CONFLUENT_HOME/bin/zookeeper-shell zk1:2181 get /zookeeper/config
 ```
 
-### Configure and Start Kafka brokers
+### Configure and start Kafka brokers
 
 Explore [`brokers.yml` playbook](./brokers.yml) and run the playbook:
 
@@ -167,3 +167,21 @@ Topic: test    PartitionCount: 8       ReplicationFactor: 3    Configs: segment.
         Topic: test    Partition: 6    Leader: 1       Replicas: 1,3,2 Isr: 1,3,2   Offline: 
         Topic: test    Partition: 7    Leader: 2       Replicas: 2,1,3 Isr: 2,1,3   Offline: 
 ```
+
+### Configure and start Confluent Control Center (C3)
+
+Explore [`c3.yml` playbook](./c.yml) and run the playbook:
+
+```bash
+ansible-playbook -i enviroments/virtualbox.yml c3.yml
+# or
+ansible-playbook -i enviroments/aws.yml c3.yml
+```
+
+Only when running on AWS: port-forward with SSH:
+
+```bash
+ssh -i ~/.ssh/private_file 9021:ec2.... ubuntu@ec2....
+```
+
+And Validate C3 is available: <http://localhost:9021>
